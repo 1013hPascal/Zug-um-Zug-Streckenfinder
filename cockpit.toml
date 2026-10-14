@@ -10,3 +10,17 @@ enabled = [
     "terminal_explain",
     "versions",
 ]
+
+[exe.build]
+start_file = "gui.py"
+name = "Zug-um-Zug-Streckenfinder"
+one_file = true
+windowed = true
+icon = ""
+datas = []
+hidden_imports = []
+self_test = false
+test_seconds = 10
+beside = [
+    "strecken.csv",
+]
