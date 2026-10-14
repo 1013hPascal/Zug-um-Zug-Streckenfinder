@@ -8,11 +8,14 @@ import networkx as nx
 
 def resource_path(rel_path: str) -> Path:
     """
-    Liefert den korrekten Pfad zu Dateien, die mit PyInstaller gebundelt werden.
+    Liefert den korrekten Pfad zu Dateien.
     - normal: relativ zu dieser Datei (engine.py)
-    - PyInstaller onefile: relativ zu sys._MEIPASS (Temp-Ordner)
+    - PyInstaller onefile: relativ zum Ordner der Exe
     """
-    base = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+    if getattr(sys, "frozen", False):
+        base = Path(sys.executable).parent
+    else:
+        base = Path(__file__).resolve().parent
     return base / rel_path
 
 
