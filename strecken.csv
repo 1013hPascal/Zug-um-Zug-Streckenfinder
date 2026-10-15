@@ -48,7 +48,7 @@ KN,LI,1,gelb
 LI,CHE,2,blau
 LI,AUT,2,pink
 LI,M,4,grau
-LI,UL,2,r
+LI,UL,2,rot
 UL,S,2,grau(2)
 S,MA,2,grau(2)
 UL,A,1,grau(2)
@@ -69,7 +69,7 @@ EF,L,3,rot
 C,DD,1,gelb
 L,C,2,blau
 DD,L,3,schwarz
-B,dD,5,grün
+B,DD,5,grün
 L,B,4,orange
 L,MD,2,gelb
 MD,H,4,blau
