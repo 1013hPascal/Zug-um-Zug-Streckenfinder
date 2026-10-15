@@ -7,12 +7,6 @@ from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QShortcut, QKeySequence
 
 from engine import build_graph_from_csv, find_routes_text
-from engine import build_graph_from_csv
-
-G = build_graph_from_csv()   # lädt automatisch strecken.csv
-
-
-CSV_DATEI = "strecken.csv"
 
 
 class MainWindow(QWidget):
@@ -22,7 +16,7 @@ class MainWindow(QWidget):
 
         # Graph einmal laden
         try:
-            self.G = build_graph_from_csv(CSV_DATEI)
+            self.G = build_graph_from_csv()   # strecken.csv neben der EXE, sonst eingebaut
             self.startup_error = None
         except Exception as e:
             self.G = None

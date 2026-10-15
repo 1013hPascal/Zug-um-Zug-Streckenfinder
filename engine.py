@@ -8,15 +8,35 @@ import networkx as nx
 
 def resource_path(rel_path: str) -> Path:
     """
-    Liefert den korrekten Pfad zu Dateien.
+    Liefert den korrekten Pfad zu Dateien, die mit PyInstaller gebundelt werden.
     - normal: relativ zu dieser Datei (engine.py)
-    - PyInstaller onefile: relativ zum Ordner der Exe
+    - PyInstaller onefile: relativ zu sys._MEIPASS (Temp-Ordner)
+    """
+    base = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+    return base / rel_path
+
+
+def app_dir() -> Path:
+    """
+    Ordner, in dem das Programm liegt:
+    - EXE: Ordner der EXE-Datei
+    - normal: Ordner dieser Datei (engine.py)
     """
     if getattr(sys, "frozen", False):
-        base = Path(sys.executable).parent
-    else:
-        base = Path(__file__).resolve().parent
-    return base / rel_path
+        return Path(sys.executable).resolve().parent
+    return Path(__file__).resolve().parent
+
+
+def find_csv(name: str = "strecken.csv") -> Path:
+    """
+    Sucht die CSV zuerst neben der EXE (bzw. neben engine.py).
+    So kann man die Strecken anpassen, ohne die EXE neu zu bauen.
+    Gibt es dort keine, wird die in die EXE eingebaute Datei verwendet.
+    """
+    neben_exe = app_dir() / name
+    if neben_exe.exists():
+        return neben_exe
+    return resource_path(name)
 
 
 def add_track(G, u, v, length, color, track_id):
@@ -67,10 +87,10 @@ def build_graph_from_csv(csv_datei: str | None = None) -> nx.DiGraph:
     """
     CSV wird 1x eingelesen, Graph wird gebaut und zurückgegeben.
 
-    Wenn csv_datei None ist, wird automatisch 'strecken.csv' geladen
-    (funktioniert normal + in PyInstaller onefile EXE).
+    Wenn csv_datei None ist, wird automatisch 'strecken.csv' geladen:
+    zuerst neben der EXE, sonst die eingebaute Datei.
     """
-    csv_path = Path(csv_datei) if csv_datei else resource_path("strecken.csv")
+    csv_path = Path(csv_datei) if csv_datei else find_csv("strecken.csv")
 
     if not csv_path.exists():
         raise FileNotFoundError(f"CSV-Datei nicht gefunden: {csv_path}")
